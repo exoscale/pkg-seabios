@@ -1,0 +1,6 @@
+# compatibility symlinks
+usr/share/seabios/extboot.bin   usr/share/seabios/optionrom/extboot.bin
+usr/share/seabios/kvmvapic.bin  usr/share/seabios/optionrom/kvmvapic.bin
+usr/share/seabios/linuxboot.bin usr/share/seabios/optionrom/linuxboot.bin
+usr/share/seabios/multiboot.bin usr/share/seabios/optionrom/multiboot.bin
+usr/share/seabios/vapic.bin     usr/share/seabios/optionrom/vapic.bin

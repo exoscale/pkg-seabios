@@ -1,0 +1,109 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+VGABIOSES = cirrus stdvga vmware qxl isavga
+VGABIOS_TARGETS = $(addprefix build/vgabios-, $(addsuffix .bin, $(VGABIOSES)))
+BUILD_TARGETS = build/bios.bin build/bios-256k.bin \
+		$(VGABIOS_TARGETS) build/optionrom-stamp
+
+build build-arch build-indep: $(BUILD_TARGETS)
+
+# common rule to build any bios.
+# $1: build target: bios or vgabios, builds $(OUT)/$1
+# $2: config options to put into .config without CONFIG_ prefix
+# $@: where to put output; build dir will be $(basename $@)
+define build-bios
+set -e; d=$(basename $@); \
+if [ ! -e $$d/.config.old ]; then \
+ rm -rf $$d; mkdir -p $$d; \
+ for x in $2; do \
+  case $$x in \
+   (*=n) echo "# CONFIG_$${x%=*} is not set";; \
+   (*) echo CONFIG_$$x;; \
+  esac; \
+ done > $$d/.config; \
+ $(MAKE) KCONFIG_CONFIG=$(CURDIR)/$$d/.config OUT=$$d/ oldnoconfig; \
+fi; \
+$(MAKE) KCONFIG_CONFIG=$(CURDIR)/$$d/.config OUT=$$d/ $$d/$1.bin; \
+rm -f $@; ln $$d/$1.bin $@
+endef
+
+build/bios.bin:
+# A (somewhat) stripped-down version of bios, to fit in 128Kb
+# If the bios is larger, we have issues with guest migration, and older xen
+# (before 4.3.1) does not work as it only supports bios of size 128Kb.
+# Upstream qemu builds smaller bios without XCHI (usb3) and XEN,
+# but we need XEN support so we disable usb3 (implenented since 1.7.4)
+# and another recent but rather small feature, pvscsi.  We're very close
+# to the available size, and the size also depends on compiler and options.
+# Qemu past 1.7 version will load bios-256k.bin by default (for new machine
+# types), but the size is still a concern when specifying older machine
+# types (1.7 and before).
+	$(call build-bios,bios,QEMU=y ROM_SIZE=128 PVSCSI=n USB_XHCI=n USB_UAS=n XEN=n)
+build/bios-256k.bin:
+	$(call build-bios,bios,QEMU=y ROM_SIZE=256)
+
+build/vgabios-cirrus.bin:
+	$(call build-bios,vgabios,BUILD_VGABIOS=y VGA_CIRRUS=y VGA_PCI=y)
+build/vgabios-stdvga.bin:
+	$(call build-bios,vgabios,BUILD_VGABIOS=y VGA_BOCHS=y VGA_PCI=y)
+build/vgabios-vmware.bin:
+	$(call build-bios,vgabios,BUILD_VGABIOS=y VGA_BOCHS=y VGA_PCI=y \
+		OVERRIDE_PCI_ID=y VGA_VID=0x15ad VGA_DID=0x0405)
+build/vgabios-qxl.bin:
+	$(call build-bios,vgabios,BUILD_VGABIOS=y VGA_BOCHS=y VGA_PCI=y \
+		OVERRIDE_PCI_ID=y VGA_VID=0x1b36 VGA_DID=0x0100)
+build/vgabios-isavga.bin:
+	$(call build-bios,vgabios,BUILD_VGABIOS=y VGA_BOCHS=y VGA_PCI=n)
+
+build/optionrom-stamp:
+	$(MAKE) -C debian/optionrom/
+	chmod -x debian/optionrom/*.bin
+	ln -s kvmvapic.bin debian/optionrom/vapic.bin
+	mkdir -p $(dir $@) && touch $@
+
+clean:
+	dh_testdir
+	rm -rf build/
+	rm -f scripts/*pyc
+	$(MAKE) -C debian/optionrom/ clean
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+	dh_install
+
+# Build architecture-independent files here.
+binary-arch: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs
+	dh_installman
+	dh_installchangelogs
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

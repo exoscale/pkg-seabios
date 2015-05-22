@@ -1,0 +1,3 @@
+build/*.bin usr/share/seabios
+build/bios/src/fw/*dsdt.aml usr/share/seabios
+debian/optionrom/*.bin usr/share/seabios
