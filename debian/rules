@@ -8,6 +8,8 @@
 include /usr/share/dpkg/pkg-info.mk
 include /usr/share/dpkg/vendor.mk
 VERSION = $(DEB_VENDOR)-$(DEB_VERSION)
+CC = gcc-4.5
+export CC
 
 VGABIOSES = cirrus stdvga virtio vmware qxl isavga
 VGABIOS_TARGETS = $(addprefix build/vgabios-, $(addsuffix .bin, $(VGABIOSES)))
