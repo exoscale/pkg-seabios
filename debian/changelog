@@ -1,8 +1,49 @@
-seabios (1.7.5-1~precise0+exo1) precise; urgency=medium
+seabios (1.8.2-1ubuntu1) wily; urgency=medium
 
-  * Backport for Precise.
+  * New debian release.  Remaining change:
+    - Build with -fgnu89-inline for GCC 5 (doko)
+  * Turn off VGA_ALLOCATE_EXTRA_STACK (LP: #1404396)
 
- -- Vincent Bernat <bernat@debian.org>  Thu, 21 May 2015 14:42:35 +0200
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 30 Jul 2015 10:40:01 -0500
+
+seabios (1.8.2-1) unstable; urgency=medium
+
+  * new upstream (minor) release (1.8.2)
+  * add vgabios-virtio.bin (new in 1.8.2)
+  * remove some leftovers from d/rules
+  * set VERSION to $(DEB_VENDOR)-$(DEB_VERSION)
+    and make build reproducible (Closes: #782905)
+  * update d/watch (Closes: #786413)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 17 Jun 2015 12:00:25 +0300
+
+seabios (1.8.1-2ubuntu1) wily; urgency=medium
+
+  * New debian release.  Remaining change:
+    - Build with -fgnu89-inline for GCC 5 (doko)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 04 Jun 2015 16:06:25 -0500
+
+seabios (1.8.1-2) unstable; urgency=medium
+
+  * reupload to unstable (previous upload was to experimental)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Tue, 28 Apr 2015 16:46:53 +0300
+
+seabios (1.8.1-1) unstable; urgency=medium
+
+  * new upstream release (1.8.1)
+  * update debian/optionrom up to qemu commit b466e1731be837
+    (Thu Dec 11 02:17:03 2014 +0100)
+  * update standards-version (no changes needed)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sat, 18 Apr 2015 16:21:20 +0300
+
+seabios (1.7.5-1ubuntu1) vivid; urgency=medium
+
+  * Build with -fgnu89-inline for GCC 5.
+
+ -- Matthias Klose <doko@ubuntu.com>  Fri, 06 Mar 2015 17:24:06 +0100
 
 seabios (1.7.5-1) unstable; urgency=medium
 
