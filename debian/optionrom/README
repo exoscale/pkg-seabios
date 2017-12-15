@@ -12,11 +12,11 @@ seabios package and build here.
 
 The files taken from qemu:
 
-pc-bios/optionrom: b466e1731be837483c7bbcf1770bbcf707477a77
- kvmvapic.S linuxboot.S multiboot.S optionrom.h
+pc-bios/optionrom
+ kvmvapic.S linuxboot.S linuxboot_dma.c multiboot.S optionrom.h
  (inludes a trivial change for #include'ing fw_cfg.h from optionrom.h)
-include/hw/nvram/fw_cfg.h 35c12e60c840bc4840cbbe3f6ca514a53b2e36bc
-scripts/signrom.py 0d6b9cc7420dd2d531b48508f0d4083d1c6a632a Jan 27 19:44:53 2012 +0100
+include/hw/nvram/fw_cfg_keys.h
+scripts/signrom.py
 pc-bios/optionrom/extboot.S 211721f31c62cc889369da79d75c38f7297b6465 Feb 18 17:13:30 2010 +0100
  (removed upstream)
 

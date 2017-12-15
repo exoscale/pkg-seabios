@@ -1,14 +1,17 @@
 LD = ld
 OBJCOPY = objcopy
 CC = cc
+CFLAGS = -O2 -m16 -Wa,-32 -ffreestanding -fno-stack-protector -fno-pie
 
-all: $(subst .S,.bin,$(wildcard *.S))
+all: extboot.bin kvmvapic.bin linuxboot.bin linuxboot_dma.bin multiboot.bin
 
 %.o: %.S
-	$(CC) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 %.img: %.o
-	$(LD) -Ttext 0 -e _start -s -o $@ $<
+	$(LD) -Ttext 0 -e _start -m elf_i386 -s -o $@ $<
 
 %.raw: %.img
 	$(OBJCOPY) -O binary -j .text $< $@

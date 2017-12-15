@@ -1,8 +1,6 @@
-Index: seabios-1.8.2/vgasrc/Kconfig
-===================================================================
---- seabios-1.8.2.orig/vgasrc/Kconfig
-+++ seabios-1.8.2/vgasrc/Kconfig
-@@ -104,7 +104,7 @@ menu "VGA ROM"
+--- a/vgasrc/Kconfig
++++ b/vgasrc/Kconfig
+@@ -123,7 +123,7 @@
      config VGA_ALLOCATE_EXTRA_STACK
          depends on BUILD_VGABIOS
          bool "Allocate an internal stack for 16bit interrupt entry point"

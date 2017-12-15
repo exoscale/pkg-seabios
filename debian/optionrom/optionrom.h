@@ -19,8 +19,7 @@
  */
 
 
-#define NO_QEMU_PROTOS
-#include "fw_cfg.h"
+#include "fw_cfg_keys.h"
 
 #define BIOS_CFG_IOPORT_CFG	0x510
 #define BIOS_CFG_IOPORT_DATA	0x511
