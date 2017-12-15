@@ -1,3 +1,9 @@
+seabios (1.10.2-1ubuntu1~xenial0+exo1) xenial; urgency=medium
+
+  * Backport to Xenial.
+
+ -- Vincent Bernat <bernat@debian.org>  Fri, 15 Dec 2017 18:18:59 +0100
+
 seabios (1.10.2-1ubuntu1) artful; urgency=medium
 
   * Merge with Debian unstable. Remaining changes:
